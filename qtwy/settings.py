@@ -7,7 +7,9 @@ ROBOTSTXT_OBEY = True
 
 ITEM_PIPELINES = {
     'qtwy.pipelines.ItemMajorPipeline': 100,
-    'qtwy.pipelines.MySQLPipeline': 200,
+    'qtwy.pipelines.RawDataMySQLPipeline': 200,
+    'qtwy.pipelines.ProcessRawDataPipeline': 300,
+    'qtwy.pipelines.ProcessedDataMySQLPipeline': 400,
 }
 
 MYSQL_CONFIGURATION = {
@@ -18,8 +20,7 @@ MYSQL_CONFIGURATION = {
     'database': 'job_info_db2',
 }
 
-# DOWNLOAD_DELAY = 1  # 间隔时间
-# CONCURRENT_REQUESTS = 5  # 请求并发数
-
+DOWNLOAD_DELAY = 1  # 间隔时间
+CONCURRENT_REQUESTS = 5  # 请求并发数
 
 JOB_MAJOR = '软件工程'
