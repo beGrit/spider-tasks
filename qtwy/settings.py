@@ -3,7 +3,7 @@ BOT_NAME = 'qtwy'
 SPIDER_MODULES = ['qtwy.spiders']
 NEWSPIDER_MODULE = 'qtwy.spiders'
 
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 ITEM_PIPELINES = {
     'qtwy.pipelines.ItemMajorPipeline': 100,
@@ -16,7 +16,7 @@ MYSQL_CONFIGURATION = {
     'host': '118.31.15.23',
     'port': 3306,
     'user': 'lsf',
-    'password': 'LSFlsf123',
+    'password': 'LMZlmz123',
     'database': 'job_info_db2',
 }
 

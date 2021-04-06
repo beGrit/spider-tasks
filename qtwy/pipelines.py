@@ -30,10 +30,10 @@ class ProcessRawDataPipeline:
         # 实现 RawData(原始数据) -> ProcessedData(真实加工后的数据)
         # 处理 15 + 24(welfare未处理) + 3(空) = 42 个字段
         # 并且返回 ProcessedData
+        self.process_blank_property()
         self.process_salary(item['salary'])
         self.process_position_description(item['position_description'])
         self.process_welfare(item['welfare'])
-        self.process_blank_property()
         self.clone_raw_val(item)
         return self.p_item
 
@@ -74,20 +74,27 @@ class ProcessRawDataPipeline:
 
         # 处理 工作经验 experience (2)
         m2 = re.match(r'(((?P<min1>\d*)-(?P<max1>\d*))|(?P<min2>\d*))(年经验)', d_list[1])
-        if m2.group('min2') is not None:
-            self.p_item['limit_job_min_experience'] = m2.group('min2')
-            self.p_item['limit_job_max_experience'] = -1
+        if m2:
+            if m2.group('min2') is not None:
+                self.p_item['limit_job_min_experience'] = m2.group('min2')
+                self.p_item['limit_job_max_experience'] = -1
+            else:
+                self.p_item['limit_job_min_experience'] = m2.group('min1')
+                self.p_item['limit_job_max_experience'] = m2.group('max1')
         else:
-            self.p_item['limit_job_min_experience'] = m2.group('min1')
-            self.p_item['limit_job_max_experience'] = m2.group('max1')
+            m2 = re.match(r'(?P<flag>应届生/在校生)')
+            if m2:
+                self.p_item['limit_is_zxs'] = 1
+                self.p_item['limit_is_yjs'] = 1
 
         # 处理 学历 (1)
         m3 = re.match(r'(?P<xl>\w*)', d_list[2])
-        self.p_item['limit_job_education'] = m3.group('xl')
+        if m3:
+            self.p_item['limit_job_education'] = m3.group('xl')
 
         # 处理 招聘人数 (1)
         m4 = re.match(r'(招(?P<n>\d*)人)', d_list[3])
-        if m4 is not None and m4.group('n') is not None:
+        if m4 and m4.group('n') is not None:
             self.p_item['number_of_recruitment'] = m4.group('n')
         else:
             self.p_item['number_of_recruitment'] = -1
